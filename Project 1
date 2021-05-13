@@ -1,0 +1,69 @@
+create database HatsCo;
+
+create table HatsCo.customer(
+firstname varchar(20) not null,
+lastname varchar(20) not null,
+memberID varchar(10),
+primary key (memberID)
+);
+
+create table HatsCo.wares(
+hattype varchar(10) not null,
+hatsize integer not null,
+hatprice integer not null,
+hatcolor varchar(20) not null,
+primary key (hattype)
+);
+
+create table HatsCo.sales(
+salesID integer not null,
+saleAmount integer not null,
+customerID varchar(10),
+hattype varchar(10),
+foreign key (customerID) references HatsCo.customer(memberID), 
+foreign key (hattype) references HatsCo.wares(hattype),
+primary key (salesID)
+);
+
+create table HatsCo.payment(
+paymenttype varchar(20) not null,
+salesID integer not null,
+salesAmt integer not null,
+customerID varchar(10),
+numofitems integer,
+foreign key (salesID) references HatsCo.sales(salesID),
+foreign key (customerID) references HatsCo.customer(memberID), 
+primary key (paymenttype, customerID)
+);
+
+INSERT INTO customer (firstname, lastname, memberID) VALUES ('Aaron', 'Garber', '0000000001');
+INSERT INTO customer (firstname, lastname, memberID) VALUES ('Bob', 'Smith', '0000000002');
+INSERT INTO wares (hattype, hatsize, hatprice, hatcolor) VALUES ('BallCap', 20, 15, 'Black');
+INSERT INTO wares (hattype, hatsize, hatprice, hatcolor) VALUES ('Hood', 25, 33, 'Red');
+INSERT INTO sales (salesID, saleAmount, customerID, hattype) VALUES (1, 23, '0000000001', 'Hood');
+INSERT INTO sales (salesID, saleAmount, customerID, hattype) VALUES (2, 40, '0000000002', 'BallCap');
+INSERT INTO payment (paymenttype, salesID, salesAmt, customerID, numofitems) VALUES ('Credit Card', 1, 23, '0000000001', 1);
+INSERT INTO payment (paymenttype, salesID, salesAmt, customerID, numofitems) VALUES ('Cash', 2, 40, '0000000002', 1);
+
+UPDATE customer SET lastname = 'Tyler' WHERE firstname = 'Aaron';
+UPDATE wares SET hatprice = 40 WHERE hatsize = 25;
+UPDATE sales SET saleAmount  = 15 WHERE salesID = 1;
+UPDATE payment SET paymenttype = 'Check' WHERE paymenttype = 'Cash';
+
+DELETE FROM customer WHERE lastname = 'Smith';
+DELETE FROM wares WHERE hatacolor = 'Red';
+DELETE FROM sales WHERE hattype = 'Hood';
+DELETE FROM payment WHERE salesAmt = 23;
+
+SELECT * FROM customer;
+SELECT firstname FROM customer WHERE firstname = 'Aaron';
+SELECT memberID FROM customer;
+SELECT * FROM wares;
+SELECT hatsize, hatprice FROM wares;
+SELECT hatcolor, hatprice, hattype FROM wares WHERE hatcolor = 'Black';
+SELECT * FROM sales;
+SELECT salesID FROM sales;
+SELECT customerID, hattype FROM sales WHERE customerID = '0000000001';
+SELECT * FROM payment;
+SELECT paymenttype, salesID, customerID, numofitems FROM payment;
+SELECT paymenttype FROM payment WHERE paymenttype = 'Credit Card';
